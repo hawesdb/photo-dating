@@ -1,44 +1,52 @@
-export const mergeSort = (array) => {
-  if (array.length < 2) return array
+import fs from 'fs'
+import cliProgress from 'cli-progress'
+import { grabMetadata, exiftool } from './metadata'
 
-  const middle = parseInt(array.length / 2)
-  const left = array.slice(0, middle)
-  const right = array.slice(middle, array.length)
-
-  return merge(mergeSort(left), mergeSort(right))
-}
-
-const merge = (left, right) => {
-  const result = []
-
-  while (left.length && right.length) {
-    if (left[0].date <= right[0].date) {
-      result.push(left.shift())
-    } else {
-      result.push(right.shift())
+export const datePhotos = async (locations) => {
+  await Promise.all(locations.map(async (location) => {
+    if (!['.', '/'].includes(Array.from(location)[0])) {
+      location = './' + location
     }
-  }
+    const bar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic)
+    const filesDir = fs.readdirSync(location)
+    console.info(`\nRenaming files in '${location}'\n`)
+    bar.start(filesDir.length, 0)
+    const files = await dateFolder(location, bar)
+    bar.stop()
+  }))
 
-  while (left.length) {
-    result.push(left.shift())
-  }
-
-  while (right.length) {
-    result.push(right.shift())
-  }
-
-  return result
+  exiftool.end()
+  console.info('\nFinished renaming files\n')
 }
 
-export const replaceAt = (str, indices, replacement) => {
-  let finalString = str
+export const dateFolder = async (location, bar, path = '', allFiles = []) => {
+  path = path !== '' ? path + '/' : ''
+  location = path + location
+  const files = fs.readdirSync(location)
 
-  indices.sort().forEach((index) => {
-    finalString =
-      finalString.substring(0, index) +
-      replacement +
-      finalString.substring(index + replacement.length)
-  })
+  await Promise.all(
+    files.map(async (file, index) => {
+      const stats = fs.lstatSync(location + '/' + file)
 
-  return finalString
+      if (stats.isFile()) {
+        try {
+          const date = await grabMetadata(location + '/' + file)
+          const ext = file.split('.')[file.split('.').length - 1]
+          fs.renameSync(location + '/' + file, location + '/' + date + '_IMG_' + index + '.' + ext)
+          bar.increment()
+        } catch (e) {
+          console.log(e)
+        }
+      } else if (stats.isDirectory()) {
+        // Uncomment to enable recursive
+        // grabFiles(file, location, allFiles)
+      } else {
+        throw Error(
+          `Unable to determine format of file '${location + '/' + file}'`
+        )
+      }
+    })
+  )
+
+  return allFiles
 }

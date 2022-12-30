@@ -1,11 +1,11 @@
 {
-  "name": "@hawesdb/photo-ordering",
+  "name": "@hawesdb/photo-dating",
   "version": "1.0.0",
   "description": "Script to order a folder containing photos",
   "main": "cli.js",
   "bin": {
-    "@hawesdb/order-photos": "bin/order-photos",
-    "order-photos": "bin/order-photos"
+    "@hawesdb/date-photos": "bin/date-photos",
+    "date-photos": "bin/date-photos"
   },
   "publishConfig": {
     "access": "public"
@@ -15,21 +15,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hawesdb/photo-ordering.git"
+    "url": "git+https://github.com/hawesdb/photo-dating.git"
   },
   "keywords": [
     "photo",
-    "ordering"
+    "dating"
   ],
   "author": "Daniel Hawes",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/hawesdb/photo-ordering/issues"
+    "url": "https://github.com/hawesdb/photo-dating/issues"
   },
-  "homepage": "https://github.com/hawesdb/photo-ordering#readme",
+  "homepage": "https://github.com/hawesdb/photo-dating#readme",
   "dependencies": {
+    "cli-progress": "^3.11.2",
     "esm": "^3.2.25",
-    "im-metadata": "^3.0.1"
+    "exiftool-vendored": "^18.6.0"
   },
   "devDependencies": {
     "prettier": "^2.8.1"

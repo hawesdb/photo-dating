@@ -1,4 +1,4 @@
-import { order } from './order'
+import { datePhotos } from './util'
 
 export const cli = (args) => {
   try {
@@ -6,7 +6,7 @@ export const cli = (args) => {
       throw Error('Please add a file location')
     } else {
       const locations = args.slice(2)
-      order(locations)
+      datePhotos(locations)
     }
   } catch (e) {
     throw Error(`Unable to order files: ${e.message}`)

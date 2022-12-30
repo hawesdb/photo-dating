@@ -1,27 +1,18 @@
-import { default as metadata } from 'im-metadata'
-import { extname } from 'path'
-
-const ALLOWED_FORMATS = ['.HEIC']
+export const exiftool = require("exiftool-vendored").exiftool
 
 export const grabMetadata = (file) => {
   const metadataPromise = new Promise((resolve, reject) => {
     try {
-      if (ALLOWED_FORMATS.includes(extname(file))) {
-        file = file.replace(/(\s|\(|\)+)/g, '\\$1')
-        metadata(file, { exif: true }, function (error, metadata) {
-          if (error) {
-            throw Error(`Unable to get metadata of file: ${file}`)
-          }
-
-          if (metadata) {
-            resolve(metadata.exif.DateTime)
-          }
+      exiftool.read(file)
+        .then((tags) => {
+          const date = tags.CreateDate || tags.AdjustmentTimestamp
+          resolve(`${date.year}${date.month.toString().padStart(2, '0')}${date.day.toString().padStart(2, '0')}`)
         })
-      } else {
-        reject(`Invalid format: ${extname(file)}`)
-      }
+        .catch((err) => {
+          throw Error(`Unable to get the metadata of the file: ${file}`)
+        })
     } catch (e) {
-      console.log(e)
+      reject(e)
     }
   })
   return metadataPromise
