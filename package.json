@@ -1,0 +1,37 @@
+{
+  "name": "@hawesdb/photo-ordering",
+  "version": "1.0.0",
+  "description": "Script to order a folder containing photos",
+  "main": "cli.js",
+  "bin": {
+    "@hawesdb/order-photos": "bin/order-photos",
+    "order-photos": "bin/order-photos"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hawesdb/photo-ordering.git"
+  },
+  "keywords": [
+    "photo",
+    "ordering"
+  ],
+  "author": "Daniel Hawes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hawesdb/photo-ordering/issues"
+  },
+  "homepage": "https://github.com/hawesdb/photo-ordering#readme",
+  "dependencies": {
+    "esm": "^3.2.25",
+    "im-metadata": "^3.0.1"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.1"
+  }
+}
